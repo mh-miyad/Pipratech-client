@@ -1,130 +1,93 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Facebook, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { brand } from "@/lib/company-data";
+import { Facebook, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+const navLinks = [
+  { label: "About Us", href: "/about" },
+  { label: "Product", href: "/products" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Our Sister Concern", href: "/sister-concerns" },
+  { label: "Contact", href: "/contact" },
+];
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="bg-[#1a3a52] text-white">
-      {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          {/* Company Info */}
-          <div className="space-y-4">
+      <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 lg:px-12">
+        <div className="grid gap-10 md:grid-cols-[1.25fr_0.8fr_1fr_1fr]">
+          <div>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 relative flex-shrink-0">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202026-04-05%20at%202.48.46%20AM-Id5mvn3NONZhGHWWtI2NEUfdf8qoSx.jpeg"
-                  alt="PIPRA Trading"
-                  fill
-                  className="object-contain"
-                />
+              <span className="relative flex h-16 w-28 overflow-hidden rounded-full bg-white/95 px-3">
+                <Image src={brand.logo} alt={brand.name} fill className="object-contain p-2" />
+              </span>
+              <div>
+                <p className="text-lg font-medium">{brand.name}</p>
+                <p className="text-xs font-normal text-white/55">Premium Electrical Solutions</p>
               </div>
-              <span className="font-bold text-xl">PIPRA Trading</span>
             </div>
-            <p className="text-gray-300 text-sm leading-relaxed">
-              Premium electrical equipment supplier and importer. Your trusted partner for quality MCBs and circuit breakers.
+            <p className="mt-5 max-w-sm text-sm font-normal leading-7 text-white/65">
+              Importer and supplier of MCB, circuit breaker, and electrical protection products for Bangladesh market buyers.
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-[#dc2626]">Navigation</h4>
-            <ul className="space-y-3">
-              <li><Link href="/about" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">About Us</Link></li>
-              <li><Link href="/products" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">Our Products</Link></li>
-              <li><Link href="/blog" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">Blog</Link></li>
-              <li><Link href="/contact" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">Contact Us</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h4 className="font-bold text-lg mb-6 text-[#dc2626]">Get In Touch</h4>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Phone size={18} className="text-[#dc2626] mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Phone</p>
-                  <a href="tel:01784310930" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
-                    +880 1784 310930
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Mail size={18} className="text-[#dc2626] mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Email</p>
-                  <a href="mailto:pipratrading@gmail.com" className="text-gray-300 hover:text-white transition-colors text-sm font-medium break-all">
-                    pipratrading@gmail.com
-                  </a>
-                </div>
-              </div>
+            <p className="text-sm font-medium text-[#dc2626]">Navigation</p>
+            <div className="mt-5 flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href} className="text-sm font-normal text-white/65 transition-colors hover:text-white">
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Address & Social */}
           <div>
-            <h4 className="font-bold text-lg mb-6 text-[#dc2626]">Location & Social</h4>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin size={18} className="text-[#dc2626] mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Address</p>
-                  <p className="text-gray-300 text-sm">
-                    1, Afarababad<br />
-                    Kamrannirchar, Dhaka-1211
-                  </p>
-                </div>
-              </div>
-              <div className="pt-2">
-                <p className="text-xs text-gray-400 font-medium mb-3">Follow Us</p>
-                <div className="flex gap-3">
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 bg-[#dc2626]/20 hover:bg-[#dc2626] rounded-lg flex items-center justify-center transition-all text-[#dc2626] hover:text-white"
-                    aria-label="Facebook"
-                  >
-                    <Facebook size={18} />
-                  </a>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 bg-[#dc2626]/20 hover:bg-[#dc2626] rounded-lg flex items-center justify-center transition-all text-[#dc2626] hover:text-white"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin size={18} />
-                  </a>
-                  <a
-                    href="mailto:pipratrading@gmail.com"
-                    className="w-10 h-10 bg-[#dc2626]/20 hover:bg-[#dc2626] rounded-lg flex items-center justify-center transition-all text-[#dc2626] hover:text-white"
-                    aria-label="Email"
-                  >
-                    <Mail size={18} />
-                  </a>
-                </div>
-              </div>
+            <p className="text-sm font-medium text-[#dc2626]">Contact</p>
+            <div className="mt-5 space-y-4">
+              <a href={brand.phoneHref} className="flex items-center gap-3 text-sm text-white/70 hover:text-white">
+                <Phone className="size-4 text-[#dc2626]" />
+                {brand.phone}
+              </a>
+              <a href={brand.emailHref} className="flex items-center gap-3 break-all text-sm text-white/70 hover:text-white">
+                <Mail className="size-4 shrink-0 text-[#dc2626]" />
+                {brand.email}
+              </a>
+              <p className="flex items-start gap-3 text-sm leading-6 text-white/70">
+                <MapPin className="mt-1 size-4 shrink-0 text-[#dc2626]" />
+                {brand.address}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-[#dc2626]">Social</p>
+            <div className="mt-5 flex gap-3">
+              {[
+                { label: "Facebook", icon: Facebook, href: "https://facebook.com" },
+                { label: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+                { label: "Email", icon: Mail, href: brand.emailHref },
+              ].map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={item.label}
+                  className="flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[#dc2626]"
+                >
+                  <item.icon className="size-4" />
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-white/10" />
-      </div>
-
-      {/* Bottom Footer */}
-      <div className="bg-black/20 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>&copy; {currentYear} PIPRA Trading. All rights reserved.</p>
-            <p>Professional Electrical Equipment Supplier | Licensed & Certified</p>
-          </div>
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs font-normal text-white/45 md:flex-row md:items-center md:justify-between">
+          <p>© {new Date().getFullYear()} {brand.name}. All rights reserved.</p>
+          <p>Company profile, product catalogue, and inquiry website.</p>
         </div>
       </div>
     </footer>

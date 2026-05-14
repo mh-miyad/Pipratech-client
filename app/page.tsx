@@ -1,283 +1,350 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { Award, Truck, CheckCircle, Zap, Phone, Mail, MapPin, Facebook, Linkedin, ArrowRight } from 'lucide-react';
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import {
+  brand,
+  companyHighlights,
+  galleryImages,
+  heroSlides,
+  products,
+  sisterConcerns,
+  stats,
+  trustItems,
+} from "@/lib/company-data";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight, ChevronLeft, ChevronRight, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useRef, useState } from "react";
+import type { Swiper as SwiperType } from "swiper";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-export default function Home() {
+import "swiper/css";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function useReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.to(".section-reveal", {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ref.current, start: "top 78%" },
+      });
+    },
+    { scope: ref },
+  );
+
+  return ref;
+}
+
+function HeroSlider() {
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [active, setActive] = useState(0);
+
+  const animateSlide = useCallback((slide?: Element) => {
+    if (!slide) return;
+    const items = slide.querySelectorAll(".hero-animate");
+    gsap.killTweensOf(items);
+    gsap.fromTo(
+      items,
+      { y: 36, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.75, stagger: 0.1, ease: "power3.out" },
+    );
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <section className="relative h-[720px] min-h-[620px] overflow-hidden bg-[#1a3a52] md:h-screen">
+      <Swiper
+        modules={[Autoplay]}
+        autoplay={{ delay: 5200, disableOnInteraction: false, pauseOnMouseEnter: true }}
+        speed={900}
+        loop
+        className="h-full"
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+          window.setTimeout(() => animateSlide(swiper.slides?.[swiper.activeIndex]), 160);
+        }}
+        onSlideChange={(swiper) => {
+          setActive(swiper.realIndex);
+          animateSlide(swiper.slides?.[swiper.activeIndex]);
+        }}
+      >
+        {heroSlides.map((slide, index) => (
+          <SwiperSlide key={slide.title} className="relative h-full">
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-[#1a3a52]/95 via-[#1a3a52]/76 to-[#1a3a52]/35" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#1a3a52]/80 via-transparent to-transparent" />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 md:pb-20 px-4 sm:px-6 md:px-8 lg:px-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a3a52]/5 via-transparent to-[#dc2626]/5 -z-10" />
-
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left Content */}
-            <div className="space-y-6 md:space-y-8">
-              <div className="space-y-3 md:space-y-4">
-                <div className="inline-block px-3 py-1 md:px-4 md:py-2 rounded-full bg-[#dc2626]/10 text-[#dc2626] text-xs md:text-sm font-semibold">
-                  Premium Electrical Solutions
-                </div>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a3a52] leading-tight">
-                  Quality <span className="text-[#dc2626]">Electrical</span> Equipment
-                </h1>
-                <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-lg">
-                  PIPRA Trading is your trusted supplier of premium MCBs, circuit breakers, and electrical equipment. Certified, reliable, and built to last.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
-                <Link href="/products" className="px-6 md:px-8 py-3 md:py-4 bg-[#1a3a52] text-white rounded-lg font-semibold hover:bg-[#0f2438] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl text-sm md:text-base">
-                  Explore Products
-                  <ArrowRight size={20} />
-                </Link>
-                <Link href="/contact" className="px-6 md:px-8 py-3 md:py-4 border-2 border-[#1a3a52] text-[#1a3a52] rounded-lg font-semibold hover:bg-[#1a3a52]/5 transition-all duration-300 flex items-center justify-center text-sm md:text-base">
-                  Contact Us
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 md:gap-6 pt-6 md:pt-8 border-t border-gray-200">
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-[#dc2626]">100%</p>
-                  <p className="text-xs md:text-sm text-gray-600">Licensed</p>
-                </div>
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-[#dc2626]">1000+</p>
-                  <p className="text-xs md:text-sm text-gray-600">Customers</p>
-                </div>
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-[#dc2626]">24/7</p>
-                  <p className="text-xs md:text-sm text-gray-600">Support</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Image - Hidden on mobile */}
-            <div className="relative hidden md:block h-64 sm:h-80 md:h-96 lg:h-full min-h-64 mt-8 md:mt-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1a3a52] to-[#dc2626] rounded-2xl opacity-10 -z-10 transform rotate-3" />
-              <div className="bg-gradient-to-br from-[#f1f5f9] to-[#e8ebf0] rounded-2xl p-6 md:p-8 h-full flex items-center justify-center shadow-xl">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202026-04-05%20at%202.48.46%20AM-Id5mvn3NONZhGHWWtI2NEUfdf8qoSx.jpeg"
-                  alt="PIPRA Trading Logo"
-                  width={300}
-                  height={300}
-                  className="object-contain max-w-full"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 md:px-8 lg:px-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a3a52] mb-4 md:mb-6">About PIPRA Trading</h2>
-            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2">
-              Since 2021, we&apos;ve been a trusted supplier of high-quality electrical equipment and components. Our commitment to excellence drives everything we do.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="space-y-4 md:space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#dc2626] text-white flex items-center justify-center">
-                  <CheckCircle size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#1a3a52] mb-2">Licensed & Certified</h3>
-                  <p className="text-gray-600">Professional and trustworthy electrical equipment supplier</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#dc2626] text-white flex items-center justify-center">
-                  <Award size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#1a3a52] mb-2">Premium Quality</h3>
-                  <p className="text-gray-600">All products meet international standards and certifications</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#dc2626] text-white flex items-center justify-center">
-                  <Truck size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#1a3a52] mb-2">Reliable Delivery</h3>
-                  <p className="text-gray-600">Fast and secure delivery across Bangladesh</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="mb-6">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0237.JPG-kOwEUdQ7tbsX3hlm6UOhlxeMfMsgMM.jpeg"
-                  alt="Md. Sajjad Hossain Tanmoy - Founder & CEO"
-                  width={200}
-                  height={200}
-                  className="rounded-xl mx-auto object-cover mb-4"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-[#1a3a52] mb-1">Md. Sajjad Hossain Tanmoy</h3>
-                <p className="text-[#dc2626] font-semibold mb-4">Founder & CEO</p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  With a passion for quality and customer satisfaction, Md. Sajjad Hossain Tanmoy founded PIPRA Trading to provide businesses with reliable electrical solutions they can trust.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-12 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a3a52] mb-4">Our Products</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Premium quality MCBs and circuit breakers designed for residential, commercial, and industrial applications
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0956%20%281%29.PNG-UjHFT9CyRNYAuWVO9YGtxny4RJPLQJ.png',
-                name: 'Single Pole MCB',
-                desc: 'Single pole miniature circuit breaker'
-              },
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0957%20%281%29.WEBP-miExDZF50gWwQ0JJLYEOfLVbuvGPCs.webp',
-                name: 'Three Pole MCB',
-                desc: 'Industrial grade three pole circuit breaker'
-              },
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0959%20%281%29.PNG-ipCHV0ErYOdw69JVP2zZy0sEfqRijz.png',
-                name: 'Advanced MCB Series',
-                desc: 'Latest technology advanced protection'
-              },
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0958.JPG%20%281%29-lHrNYd0CxlnG1E6bhhB36uuhfCN7ti.jpeg',
-                name: 'Two Pole MCB',
-                desc: 'Dual pole circuit breaker solutions'
-              },
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0960%20%281%29.PNG-VhxYTjFcz3ZxwQwISlmvtx59DaWLQy.png',
-                name: 'Compact MCB Array',
-                desc: 'Space-efficient multi-circuit protection'
-              },
-              {
-                img: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0961.JPG%20%281%29-5uhjLqdPPuoaqyNJjjNmqWcgiCZJWm.jpeg',
-                name: 'Standard Circuit Breaker',
-                desc: 'Reliable standard grade protection'
-              },
-            ].map((product, i) => (
-              <Link key={i} href="/contact" className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block">
-                <div className="aspect-video bg-white relative overflow-hidden">
-                  <Image
-                    src={product.img}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-[#1a3a52] mb-2">{product.name}</h3>
-                  <p className="text-gray-600 text-sm">{product.desc}</p>
-                  <div className="mt-4 flex items-center text-[#dc2626] font-semibold text-sm group-hover:gap-3 gap-2 transition-all">
-                    Learn More <ArrowRight size={16} />
+            <div className="absolute inset-0 z-10 flex items-center">
+              <div className="mx-auto w-full max-w-[1440px] px-5 pt-20 sm:px-8 lg:px-12">
+                <div className="max-w-4xl">
+                  <div className="hero-animate mb-6 flex items-center gap-4">
+                    <span className="h-16 w-1 rounded-full bg-[#dc2626]" />
+                    <span className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-normal uppercase tracking-[0.18em] text-white/78 backdrop-blur-md">
+                      {slide.eyebrow}
+                    </span>
+                  </div>
+                  <h1 className="hero-animate max-w-4xl text-4xl font-normal leading-[1.08] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+                    {slide.title}
+                  </h1>
+                  <p className="hero-animate mt-6 max-w-2xl text-base font-normal leading-8 text-white/70 md:text-lg">
+                    {slide.description}
+                  </p>
+                  <div className="hero-animate mt-8 flex flex-wrap gap-3">
+                    <Link href="/products" className="inline-flex items-center gap-2 rounded-full bg-[#dc2626] px-7 py-3.5 text-sm font-normal text-white transition-colors hover:bg-[#b91c1c]">
+                      View Products
+                      <ArrowRight className="size-4" />
+                    </Link>
+                    <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/45 bg-white/10 px-7 py-3.5 text-sm font-normal text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+                      Request Quote
+                    </Link>
                   </div>
                 </div>
-              </Link>
-            ))}
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <button
+        type="button"
+        aria-label="Previous slide"
+        onClick={() => swiperRef.current?.slidePrev()}
+        className="absolute left-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur-sm transition-colors hover:bg-white/15 md:flex"
+      >
+        <ChevronLeft className="size-5" />
+      </button>
+      <button
+        type="button"
+        aria-label="Next slide"
+        onClick={() => swiperRef.current?.slideNext()}
+        className="absolute right-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur-sm transition-colors hover:bg-white/15 md:flex"
+      >
+        <ChevronRight className="size-5" />
+      </button>
+
+      <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+        {heroSlides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            aria-label={`Go to slide ${index + 1}`}
+            onClick={() => swiperRef.current?.slideToLoop(index)}
+            className={active === index ? "h-2.5 w-8 rounded-full bg-[#dc2626]" : "size-2.5 rounded-full bg-white/45"}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProductsPreview() {
+  const revealRef = useReveal();
+
+  return (
+    <section ref={revealRef} className="bg-white px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+      <div className="mx-auto max-w-[1440px]">
+        <div className="section-reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm font-normal text-[#dc2626]">Product catalogue</p>
+            <h2 className="mt-2 max-w-2xl text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
+              Product display with variants and price notes
+            </h2>
           </div>
+          <Link href="/products" className="inline-flex w-fit items-center gap-2 rounded-full bg-[#dc2626] px-6 py-3 text-sm font-normal text-white hover:bg-[#b91c1c]">
+            All Products
+            <ArrowRight className="size-4" />
+          </Link>
         </div>
-      </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 px-4 md:px-8 lg:px-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a3a52] mb-4">Why Choose PIPRA Trading?</h2>
-            <p className="text-lg text-gray-600">Industry-leading service and support</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { icon: CheckCircle, title: 'Licensed & Certified', desc: 'Official trade license verified' },
-              { icon: Award, title: 'Premium Quality', desc: 'International standards' },
-              { icon: Truck, title: 'Fast Delivery', desc: 'Reliable nationwide shipping' },
-              { icon: Zap, title: 'Expert Support', desc: '24/7 customer assistance' },
-            ].map((item, i) => (
-              <div key={i} className="text-center p-6 bg-white rounded-xl hover:shadow-lg transition-shadow">
-                <div className="w-16 h-16 rounded-full bg-[#dc2626]/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="text-[#dc2626]" size={28} />
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {products.slice(0, 6).map((product) => (
+            <article key={product.id} className="section-reveal group overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb]">
+              <div className="relative aspect-[4/3] overflow-hidden bg-white">
+                <Image src={product.image} alt={product.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+              <div className="p-5">
+                <p className="text-xs font-normal text-[#dc2626]">{product.category}</p>
+                <h3 className="mt-2 text-xl font-normal text-[#1a3a52]">{product.name}</h3>
+                <p className="mt-3 line-clamp-2 text-sm leading-6 text-gray-600">{product.description}</p>
+                <div className="mt-5 space-y-2">
+                  {product.variants.slice(0, 2).map((variant) => (
+                    <div key={variant.name} className="flex items-center justify-between rounded-full bg-white px-3 py-2 text-xs text-gray-600">
+                      <span>{variant.name} / {variant.rating}</span>
+                      <span className="text-[#dc2626]">{variant.price}</span>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-lg font-bold text-[#1a3a52] mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-sm">{item.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutPreview() {
+  const revealRef = useReveal();
+
+  return (
+    <section ref={revealRef} className="bg-[#f8f9fb] px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+      <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="section-reveal relative min-h-[420px] overflow-hidden rounded-[8px]">
+          <Image src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1400&q=80" alt="Electrical project planning" fill className="object-cover" />
+        </div>
+        <div className="section-reveal">
+          <p className="text-sm font-normal text-[#dc2626]">About us</p>
+          <h2 className="mt-2 text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
+            Company profile for buyers who need dependable supply
+          </h2>
+          <p className="mt-6 text-base leading-8 text-gray-600">
+            {brand.name} is an importer and supplier of premium electrical products in Bangladesh. The website is designed as a clean company introduction, product catalogue, gallery, and inquiry channel.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            {companyHighlights.map((item) => (
+              <div key={item.label} className="flex items-center gap-3 rounded-[8px] bg-white p-4">
+                <span className="flex size-10 items-center justify-center rounded-full bg-[#dc2626] text-white">
+                  <item.icon className="size-4" />
+                </span>
+                <span className="text-sm font-normal text-[#1a3a52]">{item.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <p className="text-3xl font-normal text-[#dc2626]">{stat.value}</p>
+                <p className="mt-1 text-xs text-gray-600">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Contact Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-12 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a3a52] mb-4">Get In Touch</h2>
-            <p className="text-lg text-gray-600">We&apos;re here to help with your electrical equipment needs</p>
+function TrustSection() {
+  const revealRef = useReveal();
+
+  return (
+    <section ref={revealRef} className="bg-white px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+      <div className="mx-auto max-w-[1440px]">
+        <div className="section-reveal max-w-3xl">
+          <p className="text-sm font-normal text-[#dc2626]">Why choose us</p>
+          <h2 className="mt-2 text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
+            Slim, clean UI for real company information
+          </h2>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {trustItems.map((item) => (
+            <div key={item.title} className="section-reveal rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] p-6">
+              <span className="flex size-12 items-center justify-center rounded-full bg-[#dc2626] text-white">
+                <item.icon className="size-5" />
+              </span>
+              <h3 className="mt-5 text-lg font-normal text-[#1a3a52]">{item.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-gray-600">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GallerySisterContact() {
+  const revealRef = useReveal();
+
+  return (
+    <section ref={revealRef} className="bg-[#f8f9fb] px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+      <div className="mx-auto max-w-[1440px]">
+        <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr]">
+          <div>
+            <div className="section-reveal flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-normal text-[#dc2626]">Gallery</p>
+                <h2 className="mt-2 text-3xl font-normal text-[#1a3a52] md:text-5xl">Work and product visuals</h2>
+              </div>
+              <Link href="/gallery" className="hidden rounded-full bg-[#dc2626] px-5 py-3 text-sm font-normal text-white md:inline-flex">Open Gallery</Link>
+            </div>
+            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
+              {galleryImages.slice(0, 6).map((image, index) => (
+                <div key={image} className="section-reveal relative aspect-[4/3] overflow-hidden rounded-[8px] bg-white">
+                  <Image src={image} alt={`PIPRA gallery image ${index + 1}`} fill className="object-cover" />
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-gray-50 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone size={24} />
-              </div>
-              <h3 className="text-lg font-bold text-[#1a3a52] mb-2">Phone</h3>
-              <p className="text-[#dc2626] font-semibold text-lg">+880 1784 310930</p>
+          <div className="section-reveal rounded-[8px] bg-[#1a3a52] p-6 text-white md:p-8">
+            <p className="text-sm font-normal text-[#dc2626]">Our sister concern</p>
+            <h2 className="mt-2 text-3xl font-normal leading-tight">Connected company blocks</h2>
+            <div className="mt-7 space-y-4">
+              {sisterConcerns.map((concern) => (
+                <div key={concern.name} className="rounded-[8px] bg-white/8 p-4">
+                  <p className="font-normal">{concern.name}</p>
+                  <p className="mt-1 text-xs text-white/55">{concern.role}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="bg-gray-50 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail size={24} />
-              </div>
-              <h3 className="text-lg font-bold text-[#1a3a52] mb-2">Email</h3>
-              <p className="text-[#dc2626] font-semibold">pipratrading@gmail.com</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin size={24} />
-              </div>
-              <h3 className="text-lg font-bold text-[#1a3a52] mb-2">Address</h3>
-              <p className="text-gray-600 text-sm">1, Afarababad, Kamrannirchar, Dhaka-1211</p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-[#1a3a52] to-[#2a5070] rounded-2xl p-12 text-center text-white">
-            <h3 className="text-3xl font-bold mb-4">Ready to get started?</h3>
-            <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-              Contact us today for product inquiries, bulk orders, or to become a valued customer of PIPRA Trading
-            </p>
-            <Link href="/contact" className="px-8 py-4 bg-[#dc2626] text-white rounded-lg font-semibold hover:bg-[#b91c1c] transition-all duration-300 inline-block text-center">
-              Contact Now
+            <Link href="/sister-concerns" className="mt-7 inline-flex rounded-full bg-[#dc2626] px-5 py-3 text-sm font-normal text-white">
+              View Sister Concern
             </Link>
           </div>
         </div>
-      </section>
 
+        <div className="section-reveal mt-12 grid gap-6 rounded-[8px] bg-white p-6 md:grid-cols-[1fr_1fr] md:p-8">
+          <div>
+            <p className="text-sm font-normal text-[#dc2626]">Google map</p>
+            <h2 className="mt-2 text-3xl font-normal text-[#1a3a52]">Visit or contact PIPRA Trading</h2>
+            <div className="mt-6 space-y-3 text-sm text-gray-600">
+              <p className="flex items-center gap-3"><Phone className="size-4 text-[#dc2626]" /> {brand.phone}</p>
+              <p className="flex items-center gap-3"><Mail className="size-4 text-[#dc2626]" /> {brand.email}</p>
+              <p className="flex items-center gap-3"><MapPin className="size-4 text-[#dc2626]" /> {brand.address}</p>
+            </div>
+          </div>
+          <div className="min-h-[300px] overflow-hidden rounded-[8px] border border-[#e2e8f0]">
+            <iframe
+              title="PIPRA Trading location map"
+              src="https://www.google.com/maps?q=Kamrannirchar%2C%20Dhaka-1211&output=embed"
+              className="h-full min-h-[300px] w-full"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-white">
+      <Header />
+      <HeroSlider />
+      <AboutPreview />
+      <ProductsPreview />
+      <TrustSection />
+      <GallerySisterContact />
       <Footer />
-    </div>
+    </main>
   );
 }
