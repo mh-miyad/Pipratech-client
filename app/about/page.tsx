@@ -62,6 +62,36 @@ export default function About() {
       </section>
 
       <section className="bg-white px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+        <div className="mx-auto grid max-w-[1440px] gap-10 rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] p-6 md:p-10 lg:grid-cols-[0.75fr_1fr] lg:items-center">
+          <div className="rounded-[8px] bg-white p-4 shadow-sm">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[8px] bg-[#f1f5f9]">
+              <Image
+                src="/ceo.jpeg"
+                alt="Founder and CEO of PIPRA Trading"
+                fill
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 420px, 90vw"
+                priority
+              />
+            </div>
+            <div className="px-2 py-5 text-center">
+              <h3 className="text-2xl font-normal text-[#1a3a52]">Md. Saad Hasan Roy</h3>
+              <p className="mt-1 text-sm font-normal text-[#dc2626]">Founder & CEO</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-normal text-[#dc2626]">Founder & CEO</p>
+            <h2 className="mt-3 text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
+              Leadership focused on quality and trust
+            </h2>
+            <p className="mt-6 text-base leading-8 text-gray-600">
+              PIPRA Trading is led with a practical focus on product quality, clear buyer communication, and dependable electrical equipment supply for Bangladesh market needs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-5 py-16 sm:px-8 md:py-24 lg:px-12">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat) => (
