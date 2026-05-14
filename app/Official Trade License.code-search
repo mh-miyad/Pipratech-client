@@ -1,0 +1,22 @@
+# Query: Official Trade License
+# ContextLines: 1
+
+4 results - 2 files
+
+app/page.tsx:
+   96                    <h3 className="text-xl font-bold text-[#1a3a52] mb-2">Licensed & Certified</h3>
+   97:                   <p className="text-gray-600">Official trade license (TRAD/DSCC/006985/2021) valid through 2026</p>
+   98                  </div>
+
+  145            <div className="text-center mb-12">
+  146:             <h2 className="text-4xl md:text-5xl font-bold mb-4">Official Trade License</h2>
+  147              <p className="text-lg text-gray-300">Verified & Certified Professional Operation</p>
+
+  258              {[
+  259:               { icon: CheckCircle, title: 'Licensed & Certified', desc: 'Official trade license verified' },
+  260                { icon: Award, title: 'Premium Quality', desc: 'International standards' },
+
+app/about/page.tsx:
+  101                <p className="text-gray-600">
+  102:                 Official trade license (TRAD/DSCC/006985/2021) valid through June 2026. Your assurance of legitimacy and professionalism.
+  103                </p>
