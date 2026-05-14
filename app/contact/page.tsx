@@ -1,184 +1,183 @@
-import Image from 'next/image';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { brand } from "@/lib/company-data";
+import { Clock, Mail, MapPin, MessageSquareText, Phone, Send } from "lucide-react";
 
 export const metadata = {
-  title: 'Contact Us - PIPRA Trading',
-  description: 'Get in touch with PIPRA Trading. We are here to help with your electrical equipment needs.',
+  title: "Contact Us - PIPRA Trading",
+  description: "Contact PIPRA Trading for electrical product inquiries, variants, and supply support.",
 };
+
+const contactCards = [
+  {
+    icon: Phone,
+    title: "Phone",
+    value: brand.phone,
+    note: "Direct product inquiry",
+    href: brand.phoneHref,
+  },
+  {
+    icon: Mail,
+    title: "Email",
+    value: brand.email,
+    note: "Response within business day",
+    href: brand.emailHref,
+  },
+  {
+    icon: MapPin,
+    title: "Address",
+    value: brand.address,
+    note: "Dhaka, Bangladesh",
+    href: "https://www.google.com/maps?q=Kamrannirchar%2C%20Dhaka-1211",
+  },
+];
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 md:pb-20 px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-3 md:space-y-4 mb-12 md:mb-16">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a3a52]">
-              Get In <span className="text-[#dc2626]">Touch</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-              We&apos;re here to help with your electrical equipment needs
-            </p>
-          </div>
+      <section className="relative overflow-hidden bg-[#1a3a52] px-5 pb-20 pt-36 text-white sm:px-8 lg:px-12">
+        <div className="absolute inset-0 bg-linear-to-br from-[#1a3a52] via-[#1a3a52] to-[#dc2626]/40" />
+        <div className="relative mx-auto max-w-[1440px]">
+          <p className="text-sm font-normal text-[#dc2626]">Contact us</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-normal leading-tight md:text-6xl">
+            Talk to us about product variants and supply needs
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-8 text-white/65">
+            Send product name, rating, quantity, or project details. We will help with availability, variant selection, and price guidance.
+          </p>
         </div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 md:px-8 lg:px-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
-            <div className="bg-white rounded-xl p-6 md:p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone size={28} />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-[#1a3a52] mb-2">Phone</h3>
-              <p className="text-[#dc2626] font-semibold">+880 1784 310930</p>
-              <p className="text-gray-600 text-xs md:text-sm mt-2">Available 24/7</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 md:p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail size={28} />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-[#1a3a52] mb-2">Email</h3>
-              <p className="text-[#dc2626] font-semibold text-sm md:text-base break-all">pipratrading@gmail.com</p>
-              <p className="text-gray-600 text-xs md:text-sm mt-2">Response within 24 hours</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 md:p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-[#dc2626] text-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin size={28} />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-[#1a3a52] mb-2">Address</h3>
-              <p className="text-gray-600 text-sm md:text-base">1, Afarababad<br />Kamrannirchar, Dhaka-1211</p>
-            </div>
+      <section className="bg-[#f8f9fb] px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid gap-5 md:grid-cols-3">
+            {contactCards.map((card) => (
+              <a
+                key={card.title}
+                href={card.href}
+                target={card.href.startsWith("http") ? "_blank" : undefined}
+                rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="group rounded-[8px] border border-[#e2e8f0] bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
+                <span className="flex size-12 items-center justify-center rounded-full bg-[#dc2626] text-white">
+                  <card.icon className="size-5" />
+                </span>
+                <h2 className="mt-5 text-xl font-normal text-[#1a3a52]">{card.title}</h2>
+                <p className="mt-2 break-words text-sm leading-6 text-gray-600">{card.value}</p>
+                <p className="mt-3 text-xs font-normal text-[#dc2626]">{card.note}</p>
+              </a>
+            ))}
           </div>
-        </div>
-      </section>
 
-      {/* Contact Form & Map */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 md:px-8 lg:px-12 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            {/* Form */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#1a3a52] mb-6 md:mb-8">Send us a Message</h2>
-              <form className="space-y-4 md:space-y-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Your Name</label>
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <section className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8">
+              <p className="text-sm font-normal text-[#dc2626]">Send message</p>
+              <h2 className="mt-2 text-3xl font-normal text-[#1a3a52]">Product inquiry form</h2>
+              <form className="mt-8 grid gap-4 md:grid-cols-2">
+                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
+                  Your Name
                   <input
                     type="text"
                     placeholder="Enter your full name"
-                    className="w-full px-4 py-2 md:py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#dc2626] text-sm md:text-base"
+                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Email Address</label>
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#dc2626]"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
+                </label>
+                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
+                  Phone Number
                   <input
                     type="tel"
                     placeholder="Enter your phone number"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#dc2626]"
+                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Subject</label>
+                </label>
+                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
+                  Email Address
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
+                  Product / Subject
                   <input
                     type="text"
-                    placeholder="Enter message subject"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#dc2626]"
+                    placeholder="MCB, circuit breaker, bulk order..."
+                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Message</label>
+                </label>
+                <label className="space-y-2 text-sm font-normal text-[#1a3a52] md:col-span-2">
+                  Message
                   <textarea
-                    placeholder="Enter your message here..."
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#dc2626] resize-none"
+                    placeholder="Share quantity, model, rating, or project details..."
+                    rows={6}
+                    className="w-full resize-none rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-3 text-sm outline-none transition-colors focus:border-[#dc2626]"
                   />
-                </div>
-
+                </label>
                 <button
                   type="submit"
-                  className="w-full px-8 py-4 bg-[#dc2626] text-white rounded-lg font-semibold hover:bg-[#b91c1c] transition-all duration-300 flex items-center justify-center gap-2"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#dc2626] px-7 text-sm font-normal text-white transition-colors hover:bg-[#b91c1c] md:col-span-2 md:w-fit"
                 >
                   Send Message
-                  <Send size={20} />
+                  <Send className="size-4" />
                 </button>
               </form>
-            </div>
+            </section>
 
-            {/* Company Info */}
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-bold text-[#1a3a52] mb-4">Business Hours</h3>
-                <div className="space-y-2 text-gray-600">
-                  <p><span className="font-semibold">Monday - Friday:</span> 9:00 AM - 6:00 PM</p>
-                  <p><span className="font-semibold">Saturday:</span> 10:00 AM - 4:00 PM</p>
-                  <p><span className="font-semibold">Sunday:</span> Closed</p>
+            <aside className="space-y-5">
+              <div className="rounded-[8px] bg-[#1a3a52] p-6 text-white md:p-8">
+                <p className="text-sm font-normal text-[#dc2626]">Quick support</p>
+                <h2 className="mt-2 text-3xl font-normal">Why contact us?</h2>
+                <div className="mt-6 grid gap-3">
+                  {[
+                    "Product variant and rating inquiry",
+                    "Bulk quantity and wholesale pricing",
+                    "Electrical project supply support",
+                    "Delivery and availability discussion",
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-3 rounded-[8px] bg-white/8 p-4 text-sm text-white/78">
+                      <MessageSquareText className="size-4 text-[#dc2626]" />
+                      {item}
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-[#1a3a52] to-[#2a5070] rounded-xl p-8 text-white">
-                <h3 className="text-xl font-bold mb-4">Why Contact Us?</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full" />
-                    Product Inquiries
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full" />
-                    Bulk Orders
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full" />
-                    Wholesale Pricing
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full" />
-                    Technical Support
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full" />
-                    Partnership Opportunities
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-8">
-                <h3 className="text-xl font-bold text-[#1a3a52] mb-4">Quick Contact</h3>
-                <div className="space-y-4">
-                  <a href="tel:01784310930" className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-gray-100 transition-colors">
-                    <Phone className="text-[#dc2626]" size={24} />
-                    <span className="font-semibold text-gray-700">+880 1784 310930</span>
-                  </a>
-                  <a href="mailto:pipratrading@gmail.com" className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-gray-100 transition-colors">
-                    <Mail className="text-[#dc2626]" size={24} />
-                    <span className="font-semibold text-gray-700">pipratrading@gmail.com</span>
-                  </a>
+              <div className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-11 items-center justify-center rounded-full bg-[#dc2626] text-white">
+                    <Clock className="size-4" />
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-normal text-[#1a3a52]">Business Hours</h3>
+                    <p className="text-sm text-gray-600">Saturday - Thursday, 9:00 AM - 6:00 PM</p>
+                  </div>
                 </div>
               </div>
+            </aside>
+          </div>
+
+          <div className="mt-10 overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white">
+            <div className="grid lg:grid-cols-[0.42fr_0.58fr]">
+              <div className="p-6 md:p-8">
+                <p className="text-sm font-normal text-[#dc2626]">Location</p>
+                <h2 className="mt-2 text-3xl font-normal text-[#1a3a52]">Find PIPRA Trading</h2>
+                <p className="mt-4 text-sm leading-7 text-gray-600">{brand.address}</p>
+              </div>
+              <iframe
+                title="PIPRA Trading Google map"
+                src="https://www.google.com/maps?q=Kamrannirchar%2C%20Dhaka-1211&output=embed"
+                className="h-[360px] w-full lg:h-full"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
       </section>
 
       <Footer />
-    </div>
+    </main>
   );
 }
