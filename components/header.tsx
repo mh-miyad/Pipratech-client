@@ -2,7 +2,8 @@
 
 import { brand } from "@/lib/company-data";
 import { cn } from "@/lib/utils";
-import { Menu, Phone, X } from "lucide-react";
+import { Menu, Moon, Phone, Sun, X } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,8 +18,12 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -87,6 +92,16 @@ export function Header() {
             </nav>
 
             <div className="flex items-center gap-2">
+              {mounted && (
+                <button
+                  type="button"
+                  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                  className="flex size-9 items-center justify-center rounded-full bg-white/10 text-white/75 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white"
+                  aria-label="Toggle theme"
+                >
+                  {resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+                </button>
+              )}
               <Link
                 href="/contact"
                 className="hidden items-center gap-2 rounded-full bg-[#dc2626] py-1.5 pl-5 pr-1.5 text-sm font-normal text-white transition-all duration-200 hover:bg-[#b91c1c] active:scale-95 md:flex"

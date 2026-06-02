@@ -1,7 +1,8 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { ContactForm } from "@/components/contact-form";
 import { brand } from "@/lib/company-data";
-import { Clock, Mail, MapPin, MessageSquareText, Phone, Send } from "lucide-react";
+import { Clock, Mail, MapPin, MessageSquareText, Phone } from "lucide-react";
 
 export const metadata = {
   title: "Contact Us - PIPRA Trading",
@@ -72,58 +73,10 @@ export default function Contact() {
           </div>
 
           <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <section className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8">
+            <section className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8 dark:border-white/10 dark:bg-white/5">
               <p className="text-sm font-normal text-[#dc2626]">Send message</p>
-              <h2 className="mt-2 text-3xl font-normal text-[#1a3a52]">Product inquiry form</h2>
-              <form className="mt-8 grid gap-4 md:grid-cols-2">
-                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
-                  Your Name
-                  <input
-                    type="text"
-                    placeholder="Enter your full name"
-                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
-                  />
-                </label>
-                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
-                  Phone Number
-                  <input
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
-                  />
-                </label>
-                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
-                  Email Address
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
-                  />
-                </label>
-                <label className="space-y-2 text-sm font-normal text-[#1a3a52]">
-                  Product / Subject
-                  <input
-                    type="text"
-                    placeholder="MCB, circuit breaker, bulk order..."
-                    className="h-12 w-full rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 text-sm outline-none transition-colors focus:border-[#dc2626]"
-                  />
-                </label>
-                <label className="space-y-2 text-sm font-normal text-[#1a3a52] md:col-span-2">
-                  Message
-                  <textarea
-                    placeholder="Share quantity, model, rating, or project details..."
-                    rows={6}
-                    className="w-full resize-none rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb] px-4 py-3 text-sm outline-none transition-colors focus:border-[#dc2626]"
-                  />
-                </label>
-                <button
-                  type="submit"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#dc2626] px-7 text-sm font-normal text-white transition-colors hover:bg-[#b91c1c] md:col-span-2 md:w-fit"
-                >
-                  Send Message
-                  <Send className="size-4" />
-                </button>
-              </form>
+              <h2 className="mt-2 text-3xl font-normal text-[#1a3a52] dark:text-white">Product inquiry form</h2>
+              <ContactForm />
             </section>
 
             <aside className="space-y-5">

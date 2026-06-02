@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LenisProvider } from '@/components/lenis-provider'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 const poppins = Poppins({
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={poppins.variable}>
       <body className={`${poppins.className} font-sans antialiased`}>
-        <LenisProvider>{children}</LenisProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <LenisProvider>{children}</LenisProvider>
+        </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
