@@ -18,7 +18,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ChevronLeft, ChevronRight, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -50,6 +50,29 @@ function useReveal() {
 function HeroSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [active, setActive] = useState(0);
+  const [slides, setSlides] = useState(heroSlides);
+
+  useEffect(() => {
+    const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://industry-portfolio.techelementbd.com").replace(/\/$/, "");
+    const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "7e96ad0e-30eb-4eac-9d27-06e0cf57b80d";
+    fetch(`${BASE_URL}/api/v1/public/hero-banner`, {
+      headers: { "Content-Type": "application/json", "tenant-id": TENANT_ID, "x-tenant-id": TENANT_ID },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setSlides(
+            json.data.map((b: any) => ({
+              image: b.imageUrl,
+              eyebrow: b.tagTitle || "Premium Electrical Supplier",
+              title: b.title,
+              description: b.description || "",
+            })),
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const animateSlide = useCallback((slide?: Element) => {
     if (!slide) return;
@@ -79,7 +102,7 @@ function HeroSlider() {
           animateSlide(swiper.slides?.[swiper.activeIndex]);
         }}
       >
-        {heroSlides.map((slide, index) => (
+        {slides.map((slide, index) => (
           <SwiperSlide key={slide.title} className="relative h-full">
             <Image
               src={slide.image}
@@ -141,7 +164,7 @@ function HeroSlider() {
       </button>
 
       <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
-        {heroSlides.map((_, index) => (
+        {slides.map((_, index) => (
           <button
             key={index}
             type="button"
@@ -156,12 +179,77 @@ function HeroSlider() {
 }
 
 function ProductsPreview() {
-  const revealRef = useReveal();
+  const revealRef = useRef<HTMLDivElement>(null);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [previewLoading, setPreviewLoading] = useState(true);
+
+  useEffect(() => {
+    const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://industry-portfolio.techelementbd.com").replace(/\/$/, "");
+    const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "7e96ad0e-30eb-4eac-9d27-06e0cf57b80d";
+    fetch(`${BASE_URL}/api/v1/public/section/key/products`, {
+      headers: { "Content-Type": "application/json", "tenant-id": TENANT_ID, "x-tenant-id": TENANT_ID },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.items) {
+          const items = json.data.items.map((item: any, i: number) => {
+            const extra = item.extra || {};
+            return {
+              id: item.id || `api-${i}`,
+              name: item.title || `Product ${i + 1}`,
+              category: item.category || item.subtitle || "",
+              description: extra.shortDescription || item.description || "",
+              image: item.imageUrl || (extra.images && extra.images[0]) || "/logo.png",
+              featured: extra.featured || false,
+              attributes: extra.coreAttributes || [],
+              specs: extra.technicalSpecifications || extra.technicalSpecs || [],
+            };
+          });
+          const featured = items.filter((p: any) => p.featured);
+          setFeaturedProducts(featured.length > 0 ? featured.slice(0, 6) : items.slice(0, 6));
+        } else {
+          setFeaturedProducts(
+            products.slice(0, 6).map((p) => ({
+              id: p.id, name: p.name, category: p.category, description: p.description, image: p.image, featured: false, attributes: [], specs: p.variants || [],
+            }))
+          );
+        }
+        setPreviewLoading(false);
+      })
+      .catch(() => {
+        setFeaturedProducts(
+          products.slice(0, 6).map((p) => ({
+            id: p.id, name: p.name, category: p.category, description: p.description, image: p.image, featured: false, attributes: [], specs: p.variants || [],
+          }))
+        );
+        setPreviewLoading(false);
+      });
+  }, []);
+
+  useGSAP(
+    () => {
+      if (previewLoading) return;
+      ScrollTrigger.refresh();
+      gsap.fromTo(
+        ".products-section-reveal",
+        { y: 36, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: { trigger: revealRef.current, start: "top 78%" },
+        },
+      );
+    },
+    { scope: revealRef, dependencies: [previewLoading, featuredProducts] },
+  );
 
   return (
     <section ref={revealRef} className="bg-white px-5 py-16 sm:px-8 md:py-24 lg:px-12">
       <div className="mx-auto max-w-[1440px]">
-        <div className="section-reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="products-section-reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-normal text-[#dc2626]">Product catalogue</p>
             <h2 className="mt-2 max-w-2xl text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
@@ -174,28 +262,63 @@ function ProductsPreview() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {products.slice(0, 6).map((product) => (
-            <article key={product.id} className="section-reveal group overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-[#f8f9fb]">
-              <div className="relative aspect-[4/3] overflow-hidden bg-white">
-                <Image src={product.image} alt={product.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-              </div>
-              <div className="p-5">
-                <p className="text-xs font-normal text-[#dc2626]">{product.category}</p>
-                <h3 className="mt-2 text-xl font-normal text-[#1a3a52]">{product.name}</h3>
-                <p className="mt-3 line-clamp-2 text-sm leading-6 text-gray-600">{product.description}</p>
-                <div className="mt-5 space-y-2">
-                  {product.variants.slice(0, 2).map((variant) => (
-                    <div key={variant.name} className="flex items-center justify-between rounded-full bg-white px-3 py-2 text-xs text-gray-600">
-                      <span>{variant.name} / {variant.rating}</span>
-                      <span className="text-[#dc2626]">{variant.price}</span>
-                    </div>
-                  ))}
+        {previewLoading ? (
+          <div className="mt-12 flex items-center justify-center py-12">
+            <div className="size-8 animate-spin rounded-full border-2 border-[#dc2626] border-t-transparent" />
+          </div>
+        ) : featuredProducts.length === 0 ? (
+          <div className="mt-12 flex flex-col items-center justify-center rounded-[8px] border-2 border-dashed border-[#e2e8f0] py-16">
+            <p className="text-gray-400">No products available yet.</p>
+            <Link href="/contact" className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#dc2626] px-6 py-3 text-sm font-normal text-white hover:bg-[#b91c1c]">Contact for Products</Link>
+          </div>
+        ) : (
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProducts.map((product) => (
+              <article key={product.id} className="products-section-reveal group flex flex-col overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#f1f5f9]">
+                  <Image
+                    src={product.image || "/logo.png"}
+                    alt={product.name}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    unoptimized
+                  />
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <p className="text-xs font-normal uppercase tracking-wider text-[#dc2626]">{product.category}</p>
+                  <h3 className="mt-2 text-lg font-semibold leading-tight text-[#1a3a52]">{product.name}</h3>
+                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-gray-500">{product.description}</p>
+                  {product.specs && product.specs.length > 0 && (
+                    <div className="mt-4 space-y-1.5">
+                      {product.specs.slice(0, 3).map((spec: any, i: number) => (
+                        <div key={i} className="flex items-center justify-between rounded-full border border-[#e2e8f0] bg-[#f8f9fb] px-3 py-1.5 text-xs">
+                          <span className="text-gray-500">{spec.name || spec.label || spec.rating}</span>
+                          <span className="font-medium text-[#dc2626]">{spec.price || spec.value || ""}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {product.attributes && product.attributes.length > 0 && (
+                    <div className="mt-3 space-y-1">
+                      {product.attributes.slice(0, 3).map((attr: string, i: number) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                          <span className="size-1 rounded-full bg-[#dc2626]" />{attr}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-auto pt-4">
+                    <Link href="/products" className="inline-flex items-center gap-1.5 text-xs font-medium text-[#dc2626] hover:text-[#b91c1c] transition-colors">
+                      View Details
+                      <ArrowRight className="size-3" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

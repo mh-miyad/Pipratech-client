@@ -1,6 +1,7 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { brand, companyHighlights, stats, trustItems } from "@/lib/company-data";
+import { fetchSection } from "@/lib/fetchers";
 import Image from "next/image";
 
 export const metadata = {
@@ -8,7 +9,14 @@ export const metadata = {
   description: "Learn about PIPRA Trading and our electrical equipment supply work.",
 };
 
-export default function About() {
+export default async function About() {
+  const ceoSection = await fetchSection("about-ceo");
+  const ceoItem = ceoSection?.items?.[0] ?? null;
+  const ceoName = ceoItem?.title || "Md. Saad Hasan Roy";
+  const ceoDesignation = ceoItem?.subtitle || "Founder & CEO";
+  const ceoBio = ceoItem?.description || "PIPRA Trading is led with a practical focus on product quality, clear buyer communication, and dependable electrical equipment supply for Bangladesh market needs.";
+  const ceoImage = ceoItem?.image || "/ceo.jpeg";
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
@@ -66,7 +74,7 @@ export default function About() {
           <div className="rounded-[8px] bg-white p-4 shadow-sm">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[8px] bg-[#f1f5f9]">
               <Image
-                src="/ceo.jpeg"
+                src={ceoImage}
                 alt="Founder and CEO of PIPRA Trading"
                 fill
                 className="object-cover object-top"
@@ -75,17 +83,17 @@ export default function About() {
               />
             </div>
             <div className="px-2 py-5 text-center">
-              <h3 className="text-2xl font-normal text-[#1a3a52]">Md. Saad Hasan Roy</h3>
-              <p className="mt-1 text-sm font-normal text-[#dc2626]">Founder & CEO</p>
+              <h3 className="text-2xl font-normal text-[#1a3a52]">{ceoName}</h3>
+              <p className="mt-1 text-sm font-normal text-[#dc2626]">{ceoDesignation}</p>
             </div>
           </div>
           <div>
-            <p className="text-sm font-normal text-[#dc2626]">Founder & CEO</p>
+            <p className="text-sm font-normal text-[#dc2626]">{ceoDesignation}</p>
             <h2 className="mt-3 text-3xl font-normal leading-tight text-[#1a3a52] md:text-5xl">
               Leadership focused on quality and trust
             </h2>
             <p className="mt-6 text-base leading-8 text-gray-600">
-              PIPRA Trading is led with a practical focus on product quality, clear buyer communication, and dependable electrical equipment supply for Bangladesh market needs.
+              {ceoBio}
             </p>
           </div>
         </div>

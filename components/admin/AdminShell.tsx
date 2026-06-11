@@ -10,6 +10,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useAuth } from "@/components/admin/auth-context";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AdminToast } from "@/components/admin/AdminToast";
 
 type Subpage = { label: string; href: string };
 
@@ -62,6 +63,7 @@ const menuStructure: MenuItem[] = [
     href: "/admin/products",
     subpages: [
       { label: "Page Hero", href: "/admin/products/hero" },
+      { label: "Product Categories", href: "/admin/products/categories" },
       { label: "Product Showcase", href: "/admin/products/showcase" },
     ],
   },
@@ -74,6 +76,7 @@ const menuStructure: MenuItem[] = [
       { label: "Page Hero", href: "/admin/about/hero" },
       { label: "Story Sections", href: "/admin/about/story" },
       { label: "Stats", href: "/admin/about/stats" },
+      { label: "CEO / Founder", href: "/admin/about/ceo" },
     ],
   },
   {
@@ -100,7 +103,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   }, [pathname]);
 
   const toggleExpand = (slug: string) => {
-    setExpanded((prev) => ({ ...prev, [slug]: !prev[slug] }));
+    setExpanded((prev) => {
+      const isCurrentlyExpanded = !!prev[slug];
+      if (isCurrentlyExpanded) return {};
+      return { [slug]: true };
+    });
   };
 
   const pageTitle = useMemo(() => {
@@ -133,6 +140,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="min-h-svh bg-[#f8f9fb] text-[#1a3a52]">
+      <AdminToast />
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-[#e2e8f0] bg-white transition-transform duration-200 lg:translate-x-0",

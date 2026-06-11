@@ -182,6 +182,17 @@ export const ADMIN_PAGES: AdminPageConfig[] = [
           { name: "description", label: "Stat Value", type: "text", placeholder: "e.g. 1000+" },
         ],
       },
+      {
+        id: "ceo",
+        title: "CEO / Founder",
+        description: "Manage CEO profile information.",
+        fields: [
+          { name: "title", label: "Name", type: "text", placeholder: "CEO name" },
+          { name: "subtitle", label: "Designation", type: "text", placeholder: "e.g. Founder & CEO" },
+          { name: "description", label: "Bio", type: "textarea", placeholder: "CEO description" },
+          { name: "image", label: "Photo", type: "image", placeholder: "Upload or paste CEO photo URL" },
+        ],
+      },
     ],
   },
 ];

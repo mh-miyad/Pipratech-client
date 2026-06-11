@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f8f9fb] dark:bg-[#0f172a]">
+    <main className="flex min-h-screen items-center justify-center bg-[#f8f9fb]">
       <div className="flex flex-col items-center gap-5">
         <div className="flex gap-2">
           {[0, 1, 2].map((i) => (
@@ -11,7 +11,7 @@ export default function Loading() {
             />
           ))}
         </div>
-        <p className="text-sm text-gray-500 dark:text-white/40">Loading...</p>
+        <p className="text-sm text-gray-500">Loading...</p>
       </div>
     </main>
   );

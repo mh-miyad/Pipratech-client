@@ -73,9 +73,9 @@ export default function Contact() {
           </div>
 
           <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <section className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8 dark:border-white/10 dark:bg-white/5">
+            <section className="rounded-[8px] border border-[#e2e8f0] bg-white p-6 md:p-8">
               <p className="text-sm font-normal text-[#dc2626]">Send message</p>
-              <h2 className="mt-2 text-3xl font-normal text-[#1a3a52] dark:text-white">Product inquiry form</h2>
+              <h2 className="mt-2 text-3xl font-normal text-[#1a3a52]">Product inquiry form</h2>
               <ContactForm />
             </section>
 

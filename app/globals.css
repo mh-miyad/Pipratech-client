@@ -123,6 +123,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-weight: 400;
@@ -150,16 +151,24 @@
   .navy-blue {
     @apply bg-[#1a3a52];
   }
+
   .brand-red {
     @apply bg-[#dc2626];
   }
+
   .text-navy-blue {
     @apply text-[#1a3a52];
   }
+
   .text-brand-red {
     @apply text-[#dc2626];
   }
+
   .border-brand-red {
     @apply border-[#dc2626];
+  }
+
+  input {
+    @apply !text-black
   }
 }

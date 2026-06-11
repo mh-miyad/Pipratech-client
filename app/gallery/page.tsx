@@ -1,6 +1,6 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { galleryImages } from "@/lib/company-data";
+import { fetchSection } from "@/lib/fetchers";
 import Image from "next/image";
 
 export const metadata = {
@@ -8,7 +8,11 @@ export const metadata = {
   description: "PIPRA Trading product and company gallery.",
 };
 
-export default function Gallery() {
+export default async function Gallery() {
+  const gallerySection = await fetchSection("gallery-grid");
+
+  const images = gallerySection?.items?.filter((item) => item.image) ?? [];
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
@@ -19,22 +23,34 @@ export default function Gallery() {
             Product, office, and project visuals
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-white/65">
-            Temporary Unsplash visuals are used until final company photos are uploaded.
+            Browse the PIPRA Trading gallery.
           </p>
         </div>
       </section>
       <section className="bg-[#f8f9fb] px-5 py-16 sm:px-8 md:py-24 lg:px-12">
         <div className="mx-auto grid max-w-[1440px] gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {galleryImages.map((image, index) => (
-            <figure key={image} className="overflow-hidden rounded-[8px] bg-white shadow-sm">
-              <div className="relative aspect-[4/3]">
-                <Image src={image} alt={`PIPRA Trading gallery ${index + 1}`} fill className="object-cover" />
-              </div>
-              <figcaption className="p-4 text-sm font-normal text-[#1a3a52]">
-                Gallery Image {index + 1}
-              </figcaption>
-            </figure>
-          ))}
+          {images.length > 0 ? (
+            images.map((item, index) => (
+              <figure key={item.id} className="overflow-hidden rounded-[8px] bg-white shadow-sm">
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src={item.image!}
+                    alt={item.title || `Gallery image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+                <figcaption className="p-4 text-sm font-normal text-[#1a3a52]">
+                  {item.title || `Gallery Image ${index + 1}`}
+                </figcaption>
+              </figure>
+            ))
+          ) : (
+            <div className="col-span-full py-16 text-center text-gray-400">
+              No gallery images uploaded yet.
+            </div>
+          )}
         </div>
       </section>
       <Footer />

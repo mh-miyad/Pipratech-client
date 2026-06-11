@@ -1,20 +1,28 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://industry-portfolio.techelementbd.com";
 const API_PREFIX = "/api/v1";
-const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "";
+const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "7e96ad0e-30eb-4eac-9d27-06e0cf57b80d";
 
 function getUrl(path: string): string {
-  const base = BASE_URL.replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;
+  if (typeof window !== "undefined") {
+    return `${API_PREFIX}${p}`;
+  }
+  const base = BASE_URL.replace(/\/$/, "");
   return `${base}${API_PREFIX}${p}`;
 }
 
 function getHeaders(): Record<string, string> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (TENANT_ID) headers["x-tenant-id"] = TENANT_ID;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "tenant-id": TENANT_ID,
+    "x-tenant-id": TENANT_ID,
+  };
 
   const accessToken =
     typeof window !== "undefined" ? window.localStorage.getItem("pipra_access_token") : null;
-  if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
 
   return headers;
 }
@@ -44,7 +52,11 @@ export async function refreshAccessToken(): Promise<string | null> {
   try {
     const res = await fetch(getUrl("/auth/refresh"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "tenant-id": TENANT_ID,
+        "x-tenant-id": TENANT_ID,
+      },
       body: JSON.stringify({ refreshToken }),
     });
 
@@ -93,8 +105,10 @@ export async function uploadMedia(file: File): Promise<ApiResponse<MediaUploadRe
   const formData = new FormData();
   formData.append("image", file);
 
-  const headers: Record<string, string> = {};
-  if (TENANT_ID) headers["x-tenant-id"] = TENANT_ID;
+  const headers: Record<string, string> = {
+    "tenant-id": TENANT_ID,
+    "x-tenant-id": TENANT_ID,
+  };
 
   const accessToken =
     typeof window !== "undefined" ? window.localStorage.getItem("pipra_access_token") : null;
