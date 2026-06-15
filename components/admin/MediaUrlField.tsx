@@ -12,36 +12,10 @@ type MediaUrlFieldProps = {
 };
 
 export default function MediaUrlField({ value, onChange, placeholder = "Paste image URL or upload" }: MediaUrlFieldProps) {
-  const [uploadStatus, setUploadStatus] = useState<"idle" | "compressing" | "uploading">("idle");
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading">("idle");
   const [uploadError, setUploadError] = useState("");
 
-  async function compressImage(file: File): Promise<File> {
-    return new Promise((resolve, reject) => {
-      const img = document.createElement("img");
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        URL.revokeObjectURL(url);
-        const canvas = document.createElement("canvas");
-        const MAX = 1920;
-        let w = img.naturalWidth;
-        let h = img.naturalHeight;
-        if (w > MAX || h > MAX) {
-          if (w > h) { h = Math.round((h / w) * MAX); w = MAX; }
-          else { w = Math.round((w / h) * MAX); h = MAX; }
-        }
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d")!;
-        ctx.drawImage(img, 0, 0, w, h);
-        canvas.toBlob((blob) => {
-          if (!blob) { reject(new Error("Compression failed")); return; }
-          resolve(new File([blob], "image.jpg", { type: "image/jpeg" }));
-        }, "image/jpeg", 0.85);
-      };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Failed to load image")); };
-      img.src = url;
-    });
-  }
+  const MAX_BYTES = 10 * 1024 * 1024;
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -52,21 +26,25 @@ export default function MediaUrlField({ value, onChange, placeholder = "Paste im
       return;
     }
 
+    if (file.size > MAX_BYTES) {
+      setUploadError("Image too large. Max 10MB.");
+      e.target.value = "";
+      return;
+    }
+
     setUploadError("");
     e.target.value = "";
 
     try {
-      setUploadStatus("compressing");
-      const compressed = await compressImage(file);
       setUploadStatus("uploading");
-      const res = await uploadMedia(compressed);
+      const res = await uploadMedia(file);
       if (res.success) {
         onChange(res.data.url);
       } else {
         setUploadError(res.message || "Upload failed");
       }
     } catch {
-      setUploadError("Image processing failed.");
+      setUploadError("Image upload failed.");
     }
     setUploadStatus("idle");
   }
@@ -102,7 +80,7 @@ export default function MediaUrlField({ value, onChange, placeholder = "Paste im
           <div className="flex items-center gap-2">
             <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-[#e2e8f0] bg-[#f8f9fb] px-3 py-1.5 text-xs font-medium text-[#1a3a52] transition-colors hover:bg-[#e2e8f0] disabled:pointer-events-none disabled:opacity-50">
               {isProcessing ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
-              {uploadStatus === "compressing" ? "Compressing..." : uploadStatus === "uploading" ? "Uploading..." : "Upload"}
+              {uploadStatus === "uploading" ? "Uploading..." : "Upload"}
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={isProcessing} />
             </label>
             {isProcessing && <span className="text-xs text-gray-400">Processing image...</span>}
