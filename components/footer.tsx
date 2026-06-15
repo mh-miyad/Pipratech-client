@@ -87,7 +87,17 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs font-normal text-white/45 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {brand.name}. All rights reserved.</p>
-          <p>Company profile, product catalogue, and inquiry website.</p>
+          <p>
+            Design and Developed by{" "}
+            <a
+              href="https://techelementit.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white/70 transition-colors hover:text-white"
+            >
+              Tech Element IT
+            </a>
+          </p>
         </div>
       </div>
     </footer>
