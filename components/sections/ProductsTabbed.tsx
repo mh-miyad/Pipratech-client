@@ -63,13 +63,14 @@ function ProductCard({ product, featured = false }: { product: Product; featured
         )}
 
         {product.coreAttributes.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {product.coreAttributes.slice(0, featured ? 6 : 3).map((attr) => (
-              <span key={attr} className="rounded-full bg-[#f1f5f9] px-2.5 py-1 text-xs text-gray-600">
-                {attr}
-              </span>
+          <ul className="mt-4 space-y-2">
+            {product.coreAttributes.slice(0, featured ? 6 : 4).map((attr) => (
+              <li key={attr} className="flex items-start gap-2.5 rounded-lg bg-[#dc2626]/[0.04] px-3 py-2 text-sm text-gray-700">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#dc2626]/60" />
+                <span className="leading-snug">{attr}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
 
         <Link
@@ -96,8 +97,6 @@ export default function ProductsTabbed({ products, allTabs }: Props) {
         : products.filter((p) => (p.category || "").toLowerCase() === activeTab.toLowerCase()),
     [products, activeTab],
   );
-
-  const [featured, ...rest] = filteredProducts;
 
   return (
     <>
@@ -139,16 +138,10 @@ export default function ProductsTabbed({ products, allTabs }: Props) {
           </Link>
         </div>
       ) : (
-        <div className="space-y-5">
-          {featured && <ProductCard product={featured} featured />}
-
-          {rest.length > 0 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {rest.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       )}
     </>
