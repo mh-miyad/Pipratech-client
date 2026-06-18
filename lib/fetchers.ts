@@ -189,6 +189,8 @@ export type ApiFooterExtra = {
   tagline?: string;
   logoUrl?: string;
   address?: string;
+  phone?: string;
+  email?: string;
   hours?: string;
   contactButtonLabel?: string;
   contactButtonUrl?: string;
@@ -206,6 +208,8 @@ export type ApiFooter = {
   logoUrl: string | null;
   tagline: string | null;
   address: string | null;
+  phone: string | null;
+  email: string | null;
   hours: string | null;
   contactButtonLabel: string | null;
   contactButtonUrl: string | null;
@@ -216,17 +220,24 @@ export type ApiFooter = {
 export async function fetchFooter(): Promise<ApiFooter | null> {
   const section = await fetchSection("footer");
   if (!section) return null;
-  const extra = (section.extra ?? {}) as ApiFooterExtra;
+  const sExtra = (section.extra ?? {}) as ApiFooterExtra;
+  // Admin FooterEditor saves the footer as the first section item (address in subtitle,
+  // description in description, phone/email/copyright in item.extra). Merge it over the
+  // section-level extra so admin edits are reflected on the public site.
+  const item = section.items?.[0];
+  const iExtra = (item?.extra ?? {}) as ApiFooterExtra;
   return {
     id: section.id,
-    logoUrl: extra.logoUrl ?? section.bgImageUrl ?? null,
-    tagline: extra.tagline ?? section.description ?? null,
-    address: extra.address ?? null,
-    hours: extra.hours ?? null,
-    contactButtonLabel: extra.contactButtonLabel ?? extra.buttonText ?? null,
-    contactButtonUrl: extra.contactButtonUrl ?? extra.buttonLink ?? null,
-    copyright: extra.copyright ?? extra.copyrightText ?? null,
-    extra,
+    logoUrl: sExtra.logoUrl ?? section.bgImageUrl ?? null,
+    tagline: item?.description ?? sExtra.tagline ?? section.description ?? null,
+    address: item?.subtitle ?? iExtra.address ?? sExtra.address ?? null,
+    phone: iExtra.phone ?? sExtra.phone ?? null,
+    email: iExtra.email ?? sExtra.email ?? null,
+    hours: sExtra.hours ?? null,
+    contactButtonLabel: sExtra.contactButtonLabel ?? sExtra.buttonText ?? null,
+    contactButtonUrl: sExtra.contactButtonUrl ?? sExtra.buttonLink ?? null,
+    copyright: iExtra.copyright ?? sExtra.copyright ?? sExtra.copyrightText ?? null,
+    extra: sExtra,
   };
 }
 

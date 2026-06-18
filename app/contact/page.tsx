@@ -18,6 +18,13 @@ const contactCards = [
     href: brand.phoneHref,
   },
   {
+    icon: Phone,
+    title: "Mobile",
+    value: brand.phone2,
+    note: brand.contactPerson,
+    href: brand.phone2Href,
+  },
+  {
     icon: Mail,
     title: "Email",
     value: brand.email,
@@ -29,7 +36,7 @@ const contactCards = [
     title: "Address",
     value: brand.address,
     note: "Dhaka, Bangladesh",
-    href: "https://www.google.com/maps?q=Kamrannirchar%2C%20Dhaka-1211",
+    href: "https://www.google.com/maps?q=Ashrafabad%2C%20Kamrangirchar%2C%20Dhaka%201211",
   },
 ];
 

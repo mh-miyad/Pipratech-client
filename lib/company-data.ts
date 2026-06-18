@@ -14,9 +14,12 @@ export const brand = {
   name: "PIPRA Trading",
   phone: "+880 1784 310930",
   phoneHref: "tel:01784310930",
+  phone2: "+880 1877 310930",
+  phone2Href: "tel:01877310930",
+  contactPerson: "Md Shazzad Hossain Tonmoy",
   email: "pipratrading@gmail.com",
   emailHref: "mailto:pipratrading@gmail.com",
-  address: "1, Afarababad, Kamrannirchar, Dhaka-1211",
+  address: "1 Ashrafabad, Kamrangirchar, Dhaka 1211",
   logo: "/logo.png",
 };
 
