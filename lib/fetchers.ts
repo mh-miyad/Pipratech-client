@@ -1,4 +1,4 @@
-const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://industry-portfolio.techelementbd.com").replace(/\/$/, "");
+const BASE_URL = typeof window !== "undefined" ? "" : (process.env.NEXT_PUBLIC_BACKEND_URL || "https://industry-portfolio.techelementbd.com").replace(/\/$/, "");
 const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "7e96ad0e-30eb-4eac-9d27-06e0cf57b80d";
 
 function publicHeaders(): HeadersInit {
