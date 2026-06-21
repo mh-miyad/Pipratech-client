@@ -268,7 +268,7 @@ export async function getSectionByKey(key: string): Promise<ApiResponse<Section>
 }
 
 export async function getPublicSectionByKey(key: string): Promise<ApiResponse<Section>> {
-  const res = await api.get<BackendSection>(`/public/section/key/${encodeURIComponent(key)}`);
+  const res = await api.get<BackendSection>(`/public/section/key/${encodeURIComponent(key)}?limit=100`);
   if (!res.success) return res;
   return success(res, normalizeSection(res.data));
 }

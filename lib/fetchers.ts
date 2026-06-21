@@ -175,7 +175,7 @@ function normalizeSection(section: PublicSectionResponse): ApiSection {
 }
 
 export async function fetchSection(key: string): Promise<ApiSection | null> {
-  const data = await publicGet<PublicSectionResponse>(`/public/section/key/${encodeURIComponent(key)}`);
+  const data = await publicGet<PublicSectionResponse>(`/public/section/key/${encodeURIComponent(key)}?limit=100`);
   return data ? normalizeSection(data) : null;
 }
 
