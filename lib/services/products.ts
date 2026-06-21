@@ -98,7 +98,7 @@ function normalizeCategory(value: string | null | undefined): ProductCategory {
 
 function sectionItemToProduct(item: SectionItem, index: number): Product {
   const extra = readExtra(item);
-  const title = asString(item.title).trim() || `Product ${index + 1}`;
+  const title = asString(item.title).trim() || asString((item as any).name).trim() || `Product ${index + 1}`;
   const fallbackImage = (item as ImageField).imageUrl ?? null;
   const slug = asString(extra.slug).trim() || slugify(title) || `product-${index + 1}`;
 
@@ -135,10 +135,18 @@ function sectionItemToProduct(item: SectionItem, index: number): Product {
   };
 }
 
+function hasContent(item: SectionItem): boolean {
+  const title = asString(item.title).trim();
+  const extra = readExtra(item);
+  const hasImage = asArray<string>(extra.images).some((img) => typeof img === "string" && img.length > 0)
+    || asString((item as any).imageUrl).trim().length > 0;
+  return title.length > 0 || hasImage;
+}
+
 function sectionToProducts(section: Section | null | undefined): Product[] {
   if (!section || !Array.isArray(section.items)) return [];
   return section.items
-    .filter((item) => asString(item.title).trim() !== "")
+    .filter(hasContent)
     .map((item, index) => sectionItemToProduct(item, index));
 }
 
